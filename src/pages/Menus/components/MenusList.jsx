@@ -2,7 +2,7 @@ import { IconEditCircle } from "@tabler/icons-react";
 import { IconTrash } from "@tabler/icons-react";
 import { IconPlus } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
-import ProductService from "@services/ProductService.js";
+import MenusServices from "@services/MenusServices.js";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useMemo } from "react";
@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 function MenusList() {
   const [products, setProducts] = useState([]);
   const [searchParam, setSearchParam] = useSearchParams();
-  const productService = useMemo(() => ProductService(), []);
+  const productService = useMemo(() => MenusServices(), []);
   const { handleSubmit, register } = useForm();
 
   const search = searchParam.get("q") || "";

@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import ProductService from "@services/ProductService.js";
+import MenusServices from "@services/MenusServices.js";
 import { useEffect } from "react";
 
 const schema = z.object({
@@ -37,7 +37,7 @@ function MenusForm() {
     resolver: zodResolver(schema),
   });
   const navigate = useNavigate();
-  const productService = ProductService();
+  const productService = MenusServices();
   const { id } = useParams();
 
   const [previewImage, setPreviewImage] = useState(
