@@ -1,15 +1,28 @@
 import {createBrowserRouter} from "react-router-dom";
+
+import Home from "@pages/Home/Home";
 import Login from "@pages/Authentication/Login";
 
 import DashboardLayout from "@/layout/DashboardLayout";
 import Dashboard from "@pages/Dashboard/Dashboard";
+import Customer from "@pages/Customer/Customer";
+import CustomerList from "@pages/Customer/components/CustomerList";
+import CustomerForm from "@pages/Customer/components/CustomerForm";
 import ProtectedRoute from "./ProtectedRoute";
-import Menu from "@pages/Menus/Menu.jsx";
-import MenusForm from "@pages/Menus/components/MenusForm.jsx";
-import MenusList from "@pages/Menus/components/MenusList.jsx";
+import AdminList from "@pages/Admin/components/AdminList";
+import Admin from "@pages/Admin/Admin";
+import AdminForm from "@pages/Admin/components/AdminForm";
+import Menus from "@pages/Product/Menus.jsx";
+import MenusForm from "@pages/Product/components/MenusForm.jsx";
+import MenusList from "@pages/Product/components/MenusList.jsx";
+import Transaction from "../pages/Transaction/Transaction";
+import TransactionList from "../pages/Transaction/components/TransactionList";
 
 const router = createBrowserRouter([
-
+  {
+    path: "/",
+    element: <Home />,
+  },
   {
     path: "/login",
     element: <Login />,
@@ -17,6 +30,7 @@ const router = createBrowserRouter([
 
   {
     path: "dashboard",
+    errorElement: <>Error Cuy!</>,
     element: (
       <ProtectedRoute>
         <DashboardLayout />
@@ -27,12 +41,37 @@ const router = createBrowserRouter([
         index: true,
         element: <Dashboard />,
       },
-
-
-
+      {
+        path: "customer",
+        element: <Customer />,
+        children: [
+          {
+            index: true,
+            element: <CustomerList />,
+          },
+          {
+            path: "new",
+            element: <CustomerForm />,
+          },
+        ],
+      },
+      {
+        path: "admin",
+        element: <Admin />,
+        children: [
+          {
+            index: true,
+            element: <AdminList />,
+          },
+          {
+            path: "new",
+            element: <AdminForm />,
+          },
+        ],
+      },
       {
         path: "product",
-        element: <Menu />,
+        element: <Menus />,
         children: [
           {
             index: true,
@@ -48,7 +87,16 @@ const router = createBrowserRouter([
           },
         ],
       },
-
+      {
+        path: "transaction",
+        element: <Transaction />,
+        children: [
+          {
+            index: true,
+            element: <TransactionList />,
+          },
+        ],
+      },
 
     ],
   },

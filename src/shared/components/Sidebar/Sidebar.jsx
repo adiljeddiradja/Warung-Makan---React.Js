@@ -1,4 +1,13 @@
-import {IconApps, IconAsset, IconChevronDown, IconDoorExit, IconHome2, IconUsers,} from "@tabler/icons-react";
+import {
+  IconAccessible,
+  IconApps,
+  IconAsset,
+  IconChevronDown,
+  IconDoorExit,
+  IconHome2,
+  IconReceipt,
+  IconUsers,
+} from "@tabler/icons-react";
 import PropTypes from "prop-types";
 import {useEffect} from "react";
 import {Link, useNavigate} from "react-router-dom";
@@ -30,10 +39,11 @@ export default function Sidebar({ isVisible, setVisible }) {
         <Link to="/" className="text-white text-decoration-none" href="/">
           <h2 className="fs-2">
             <i>
-              <b>WARUNG MAKAN</b> BAHARI
+              <b>Warung Makan</b> Bahari
             </i>
           </h2>
         </Link>
+        <h2 className="fs-6 my-4 font-primary fw-bold">Sedapnyee..</h2>
       </div>
       <nav>
         <ul className="d-flex flex-column gap-3 nav-list list-unstyled">
@@ -56,11 +66,11 @@ export default function Sidebar({ isVisible, setVisible }) {
             <ul className="text-white cursor-pointer d-flex flex-column gap-3 btn-toggle-nav list-unstyled mx-4">
               <li className="cursor-pointer">
                 <Link
-                  className="text-white text-decoration-none"
-                  to="/dashboard"
+                    className="text-white text-decoration-none"
+                    to="/dashboard"
                 >
                   <i className="me-3">
-                    <IconHome2 />
+                    <IconHome2/>
                   </i>
                   <span>Home</span>
                 </Link>
@@ -68,20 +78,62 @@ export default function Sidebar({ isVisible, setVisible }) {
 
               <li className="cursor-pointer">
                 <Link
-                  to="/dashboard/product"
-                  className="text-white text-decoration-none"
+                    to="/dashboard/product"
+                    className="text-white text-decoration-none"
                 >
                   <i className="me-3">
-                    <IconAsset />
+                    <IconAsset/>
                   </i>
                   <span>Menus</span>
                 </Link>
               </li>
-
+              <li className="cursor-pointer">
+                <Link
+                    to="/dashboard/customer"
+                    className="text-white text-decoration-none"
+                >
+                  <i className="me-3">
+                    <IconUsers/>
+                  </i>
+                  <span>Customer</span>
+                </Link>
+              </li>
+              <li className="cursor-pointer">
+                <Link
+                    className="text-white text-decoration-none"
+                    to="/dashboard/admin"
+                >
+                  <i className="me-3">
+                    <IconAccessible/>
+                  </i>
+                  <span>Admin</span>
+                </Link>
+              </li>
+              <li className="cursor-pointer">
+                <Link
+                    className="text-white text-decoration-none"
+                    to="#"
+                >
+                  <i className="me-3">
+                    <IconAccessible/>
+                  </i>
+                  <span>Table</span>
+                </Link>
+              </li>
             </ul>
           </div>
 
-
+          <li className="cursor-pointer text-white">
+            <Link
+                className="text-white text-decoration-none"
+                to="/dashboard/transaction"
+            >
+              <i className="me-3">
+                <IconReceipt/>
+              </i>
+              <span>Transaction</span>
+            </Link>
+          </li>
           <hr />
           <li
             data-bs-toggle="modal"

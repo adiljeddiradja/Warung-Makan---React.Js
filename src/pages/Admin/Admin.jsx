@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-function Menu() {
+function Admin() {
   return (
     <div className="p-4">
       <Outlet />
@@ -8,4 +8,4 @@ function Menu() {
   );
 }
 
-export default Menu;
+export default Admin;

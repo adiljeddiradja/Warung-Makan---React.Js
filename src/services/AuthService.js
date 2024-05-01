@@ -7,7 +7,15 @@ const AuthService = () => {
         return data;
     }
 
+    const registerAdmin = async (payload) => {
+        const { data } = await axiosInstance.post("/auth/register/admin", payload);
+        return data;
+    }
 
+    const registerCustomer = async (payload) => {
+        const { data } = await axiosInstance.post("/auth/register", payload);
+        return data;
+    }
 
     const validateToken = async () => {
         try {
@@ -21,7 +29,8 @@ const AuthService = () => {
 
     return {
         login,
-
+        registerAdmin,
+        registerCustomer,
         validateToken,
     }
 }

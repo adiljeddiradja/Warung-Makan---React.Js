@@ -5,26 +5,59 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import MenusServices from "@services/MenusServices.js";
+import MenuServices from "@services/MenuServices.js";
 import { useEffect } from "react";
 
-const schema = z.object({
+const createSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(1, "name wajib di isi!"),
   price: z
     .string()
-    .refine((val) => !isNaN(parseFloat(val)), "Harga harus berupa angka")
+    .refine((val) => !isNaN(parseFloat(val)), "harga harus berupa angka")
     .transform((val) => parseInt(val))
     .refine((val) => val >= 0, "harga harus lebih dari 0"),
   stock: z
     .string()
-    .refine((val) => !isNaN(parseInt(val)), "Stok harus berupa angka")
+    .refine((val) => !isNaN(parseInt(val)), "stok harus berupa angka")
     .transform((val) => parseInt(val))
     .refine((val) => val >= 0, "stock harus lebih dari 0"),
-  image: z.any(),
+  image: z
+    .any()
+    .refine(
+      (files) =>
+        files.length !== 0 &&
+        ["image/png", "imgae/jpg", "image/jpeg"].includes(files[0].type),
+      "format gambar tidak sesuai"
+    ),
 });
 
+const updateSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().min(1, "name wajib di isi!"),
+  price: z
+    .string()
+    .refine((val) => !isNaN(parseFloat(val)), "harga harus berupa angka")
+    .transform((val) => parseInt(val))
+    .refine((val) => val >= 0, "harga harus lebih dari 0"),
+  stock: z
+    .string()
+    .refine((val) => !isNaN(parseInt(val)), "stok harus berupa angka")
+    .transform((val) => parseInt(val))
+    .refine((val) => val >= 0, "stock harus lebih dari 0"),
+  image: z
+    .any()
+    .optional()
+    .refine((files) => {
+      if (files.length === 0) return true;
+      return ["image/png", "imgae/jpg", "image/jpeg"].includes(files[0].type);
+    }, "format gambar tidak sesuai"),
+});
+
+const productService = MenuServices();
+
 function MenusForm() {
+  const { id } = useParams();
+
   const {
     register,
     handleSubmit,
@@ -32,13 +65,12 @@ function MenusForm() {
     clearErrors,
     reset,
     setValue,
+    trigger,
   } = useForm({
     mode: "onChange",
-    resolver: zodResolver(schema),
+    resolver: zodResolver(id ? updateSchema : createSchema),
   });
   const navigate = useNavigate();
-  const productService = MenusServices();
-  const { id } = useParams();
 
   const [previewImage, setPreviewImage] = useState(
     "https://lh5.googleusercontent.com/proxy/t08n2HuxPfw8OpbutGWjekHAgxfPFv-pZZ5_-uTfhEGK8B5Lp-VN4VjrdxKtr8acgJA93S14m9NdELzjafFfy13b68pQ7zzDiAmn4Xg8LvsTw1jogn_7wStYeOx7ojx5h63Gliw"
@@ -56,20 +88,39 @@ function MenusForm() {
   };
 
   const onSubmit = async (data) => {
-    try {
-      const form = new FormData();
-      const product = {
-        name: data.name,
-        price: data.price,
-        stock: data.stock,
-      };
-      form.append("product", JSON.stringify(product));
-      form.append("image", data.image[0]);
-      await productService.create(form);
-      clearForm();
-      navigate("/dashboard/product");
-    } catch (err) {
-      console.log(err);
+    if (data.id) {
+      try {
+        const form = new FormData();
+        const product = {
+          id: data.id,
+          name: data.name,
+          price: data.price,
+          stock: data.stock,
+        };
+        form.append("product", JSON.stringify(product));
+        form.append("image", data.image[0]);
+        await productService.update(form);
+        clearForm();
+        navigate("/dashboard/product");
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        const form = new FormData();
+        const product = {
+          name: data.name,
+          price: data.price,
+          stock: data.stock,
+        };
+        form.append("product", JSON.stringify(product));
+        form.append("image", data.image[0]);
+        await productService.create(form);
+        clearForm();
+        navigate("/dashboard/product");
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 
@@ -86,16 +137,17 @@ function MenusForm() {
           const currentProduct = response.data;
           setValue("id", currentProduct.id);
           setValue("name", currentProduct.name);
-          setValue("price", currentProduct.price);
-          setValue("stock", currentProduct.stock);
+          setValue("price", currentProduct.price.toString());
+          setValue("stock", currentProduct.stock.toString());
           setPreviewImage(currentProduct.image.url);
+          trigger();
         } catch (error) {
           console.log(error);
         }
       };
       getProductById();
     }
-  }, [id, productService, setValue]);
+  }, [id, setValue, trigger]);
 
   return (
     <div className="shadow-sm p-4 rounded-2">
@@ -161,8 +213,9 @@ function MenusForm() {
             />
           </label>
           <input
-            {...register("image")}
-            onChange={handleImageChange}
+            {...register("image", {
+              onChange: handleImageChange,
+            })}
             type="file"
             accept="image/png, image/jpeg, image/jpg"
             className={`form-control ${errors.image && "is-invalid"}`}

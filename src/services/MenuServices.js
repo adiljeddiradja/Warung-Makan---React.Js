@@ -1,6 +1,6 @@
 import axiosInstance from '@/api/axiosInstance';
 
-const MenusServices = () => {
+const MenuServices = () => {
     const create = async (payload) => {
         const { data } = await axiosInstance.post('/menus', payload);
         return data;
@@ -35,4 +35,4 @@ const MenusServices = () => {
     }
 }
 
-export default MenusServices;
+export default MenuServices;
